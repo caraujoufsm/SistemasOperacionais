@@ -14,7 +14,7 @@ void cadeia(int qtd)
     Processo = fork();    // Chamada Fork
 
     if ( Processo ) {
-      printf("Iniciando a contagem de tempo do processo pid [%d] pai [%d] teste[%d]\n", getpid(), getppid(), Processo);
+      printf("Iniciando a contagem de tempo do processo pid [%d] pai [%d]\n", getpid(), getppid());
        break;        // Impede que o pai de um novo fork
     }
     printf("Sou o filho[%d], pid = [%d], meu pai eh [%d]\n",i, getpid(), getppid()); // Mostra o pid do filho e o pid do pai
@@ -69,13 +69,14 @@ int main(int argc, char *argv[])
   int altura;
   int pai = getpid();
   int qtd = (atoi(argv[1])*2);
+  int rep = (atoi(argv[2]));
   double tempo_arv, tempo_cad;
   clock_t ini_arv, fim_arv, ini_cad, fim_cad;
   printf("Pai: [%d]\n", pai);
 
-  if (argc != 2)
+  if (argc != 3)
   {
-    fprintf(stderr, "Esta faltando argumentos!\n");
+    fprintf(stderr, "Estao faltando argumentos!\n");
     return EXIT_FAILURE;
   }
 
@@ -86,37 +87,39 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  if (rep < 1)
+  {
+    fprintf(stderr, "%s: Valor de repeticao nao pode ser menor que 1!\n");
+    return EXIT_FAILURE;
+  }
+
+  while(rep > 1)
+  {
+
   ini_arv = clock();
-  printf("Imprimindo a taxa de clock: %d\n", ini_arv);
-  printf("Tempo inicial da arvore: %ld segundos\n", (double)(ini_arv/CLOCKS_PER_SEC));
+  printf("Tempo inicial da arvore: %g segundos\n", (double)(ini_arv)/CLOCKS_PER_SEC);
   proc_bin(0,0,altura);
 
   if(pai == getpid())
   {
     fim_arv = clock();
+    printf("Tempo final da arvore: %g segundos\n", (double)(fim_arv)/CLOCKS_PER_SEC);
     tempo_arv = ((double) (fim_arv - ini_arv)) / CLOCKS_PER_SEC;
-    printf("Processo executado em %g segundos\n", tempo_arv);
+    printf("Processo arvore executado em %g segundos\n", tempo_arv);
   }
-
+  printf("-----------------------------------------------------------------\n");
   ini_cad = clock();
-  printf("Tempo inicial da cadeia: %ld segundos\n", (long)(ini_cad/CLOCKS_PER_SEC));
+  printf("Tempo inicial da cadeia: %g segundos\n", (double)(ini_cad)/CLOCKS_PER_SEC);
   cadeia(qtd);
 
   if(pai == getpid())
   {
     fim_cad = clock();
+    printf("Tempo final da cadeia: %g segundos\n", (double)(fim_cad)/CLOCKS_PER_SEC);
     tempo_cad = ((double) (fim_cad - ini_cad)) / CLOCKS_PER_SEC;
-    printf("Processo executado em %g segundos\n", tempo_cad);
+    printf("Processo cadeia executado em %g segundos\n", tempo_cad);
   }
-
-  if(tempo_cad < tempo_arv)
-  {
-    printf("\n\n\n\nO tempo da arvore foi %g mais rapido que o tempo da cadeia\n\n\n", (tempo_arv - tempo_cad));
-  }
-  else
-  {
-    printf("\n\n\n\nO tempo da cadeia foi %g mais rapido que o tempo da arvore\n\n\n", (tempo_cad - tempo_arv));
-  }
-
+  rep --;
+}
   return EXIT_SUCCESS;
 }
