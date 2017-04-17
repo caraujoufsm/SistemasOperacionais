@@ -11,7 +11,7 @@ void cadeia(int qtd)
   printf("Meu pid eh [%d]\n", getpid());
   for (i=1 ; i <= qtd ; i++) {
 
-    Processo = fork();    // Fork
+    Processo = fork();    // Chamada Fork
 
     if ( Processo ) {
       printf("Iniciando a contagem de tempo do processo pid [%d] pai [%d] teste[%d]\n", getpid(), getppid(), Processo);
