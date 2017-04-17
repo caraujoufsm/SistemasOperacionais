@@ -36,7 +36,7 @@ void proc_bin(int i, int h_atual, int max)
   }
   else if (IdProcesso == 0)
   {
-    sleep(2);
+    sleep(1);
     // Processo Filho
     printf("Sou o filho, meu pid eh [%d], meu pai eh [%d]\n", getpid(), getppid());
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
   int altura;
   int pai = getpid();
   int qtd = (atoi(argv[1])*2);
-  double tempo;
+  double tempo_arv, tempo_cad;
   clock_t ini_arv, fim_arv, ini_cad, fim_cad;
   printf("Pai: [%d]\n", pai);
 
@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
   if(pai == getpid())
   {
     fim_arv = clock();
-    tempo = ((double) (fim_arv - ini_arv)) / CLOCKS_PER_SEC;
-    printf("Processo executado em %g segundos\n", tempo);
+    tempo_arv = ((double) (fim_arv - ini_arv)) / CLOCKS_PER_SEC;
+    printf("Processo executado em %g segundos\n", tempo_arv);
   }
 
   ini_cad = clock();
@@ -105,8 +105,18 @@ int main(int argc, char *argv[])
   if(pai == getpid())
   {
     fim_cad = clock();
-    tempo = ((double) (fim_cad - ini_cad)) / CLOCKS_PER_SEC;
-    printf("Processo executado em %g segundos\n", tempo);  }
+    tempo_cad = ((double) (fim_cad - ini_cad)) / CLOCKS_PER_SEC;
+    printf("Processo executado em %g segundos\n", tempo_cad);
+  }
+
+  if(tempo_cad < tempo_arv)
+  {
+    printf("\n\n\n\nO tempo da arvore foi %g mais rapido que o tempo da cadeia\n\n\n", (tempo_arv - tempo_cad));
+  }
+  else
+  {
+    printf("\n\n\n\nO tempo da cadeia foi %g mais rapido que o tempo da arvore\n\n\n", (tempo_cad - tempo_arv));
+  }
 
   return EXIT_SUCCESS;
 }
